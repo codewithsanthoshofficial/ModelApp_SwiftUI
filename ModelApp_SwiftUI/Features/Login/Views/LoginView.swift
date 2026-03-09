@@ -41,14 +41,17 @@ struct LoginView: View {
                     
                     VStack(spacing: 15) {
                         if  !viewmodel.isLoginScreen {
-                            InputField(icon: "person", placeholder: "Name", text: $viewmodel.name, isError: viewmodel.showError && viewmodel.name.isEmpty)
+                            InputField(icon: "person", placeholder: "Name", text: $viewmodel.name, isError: viewmodel.showError && viewmodel.name.isEmpty, textIdentifier: "nameTextField")
+                            
                         }
                         
-                        InputField(icon: "envelope", placeholder: "Email Address", text: $viewmodel.email, isError: viewmodel.showError && viewmodel.isEmailInvalid)
+                        InputField(icon: "envelope", placeholder: "Email Address", text: $viewmodel.email, isError: viewmodel.showError && viewmodel.isEmailInvalid, textIdentifier: "emailTextField")
+                            .accessibilityIdentifier("emailTextField")
                     }
                     
                     VStack(alignment: .trailing) {
-                        InputField(icon: "lock", placeholder: "Password", text: $viewmodel.password, isSecure: true, isError: viewmodel.showError && viewmodel.password.count < 6)
+                        InputField(icon: "lock", placeholder: "Password", text: $viewmodel.password, isSecure: true, isError: viewmodel.showError && viewmodel.password.count < 6, textIdentifier: "passwordTextField")
+                            .accessibilityIdentifier("passwordTextField") // <--- Add this
                         
                         
                         
@@ -66,12 +69,13 @@ struct LoginView: View {
                             .font(.caption)
                             .foregroundStyle(.red)
                             .multilineTextAlignment(.center)
+                            .accessibilityIdentifier("errorMessage")
                     }
                     
                     Button {
                         Task {
                             await viewmodel.login()
-                            
+                            viewmodel.loginSuccess = true
                             if viewmodel.loginSuccess {
                                 isLoggedIn = true
                             }
@@ -86,6 +90,7 @@ struct LoginView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                             .padding(20)
                     }
+                    .accessibilityIdentifier("loginButton")
                 }
             }
             

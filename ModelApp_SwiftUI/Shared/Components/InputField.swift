@@ -13,6 +13,7 @@ struct InputField: View {
     @Binding var text: String
     var isSecure:Bool = false
     var isError:Bool
+    var textIdentifier:String  //UITest purpose only
     
     var body: some View {
         HStack {
@@ -22,8 +23,10 @@ struct InputField: View {
             
             if isSecure {
                 SecureField(placeholder, text: $text)
+                    .accessibilityIdentifier(textIdentifier)
             } else {
                 TextField(placeholder, text: $text)
+                    .accessibilityIdentifier(textIdentifier)
             }
             
             if isSecure {
@@ -44,5 +47,5 @@ struct InputField: View {
 }
 
 #Preview {
-    InputField(icon: "person", placeholder: "Username", text: .constant(""), isSecure: false, isError: false)
+    InputField(icon: "person", placeholder: "Username", text: .constant(""), isSecure: false, isError: false, textIdentifier: "")
 }

@@ -39,6 +39,7 @@ struct HomeView: View {
             }
         }
         .navigationTitle("Home")
+        .accessibilityIdentifier("homeTitle")
         .safeAreaInset(edge: .bottom) {
             Color.clear.frame(height: 80)
         }
