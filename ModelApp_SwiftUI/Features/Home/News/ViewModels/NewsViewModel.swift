@@ -9,57 +9,73 @@ import SwiftUI
 import Combine
 
 
-//class NewsViewModel:ObservableObject {
-//    @Published var news: [Articles] = []
-//    
-////    init() {
-////        Task {
-////            do {
-////                try await fetchNews()
-////            } catch {
-////                print("Failed to fetch news: \(error)")
-////            }
-////        }
-////    }
-//    
-//    func fetchNews() async throws {
-//        
-//        do {
-//            let response:NewsModelRes = try await ApiService.shared.request(endURL: APIEndPoint.news.path, httpMethod: .get)
-//            self.news = response.articles
-//        }
-//        catch {
-//            print("API Failed to load news")
-//        }
-//        
-//        
-//    }
-//    
-//}
-
-
-import Foundation
-
-
 class NewsViewModel:ObservableObject {
     
-    @Published var newList:[Articles] = []
-    @Published var errorMessage: String?
+    //    @Published var newList:[Articles] = []
+    //    @Published var errorMessage: String?
+    //    @Published var isLoading = false
     
-    init() {
-//        Task {await self.getNews()}
+    @Published var state: NewsViewState = .idle
+    private let service:NewsProtocolService
+    
+    init (service : NewsProtocolService = NewsService()) {
+        self.service = service
+    }
+    
+    func loadNews() async {
+        await getNews()
     }
     
     @MainActor
     func getNews() async {
+        
+        state = .loading
+        
         do {
-            let response:NewsModelRes = try await ApiService.shared.request(endURL:APIEndPoint.news.path)
-            self.newList = response.articles
-            print(self.newList.count)
+            let response:NewsModelRes = try await service.newsResponse()
+            state = .success(response.articles)
+            //self.newList = response.articles
+            //print(self.newList.count)
         }
         catch {
-            self.errorMessage = "Request failed:\(error)"
+            // self.errorMessage = "Request failed:\(error)"
+            state = .error("Request failed:\(error)")
         }
+    }
+}
+
+
+
+
+enum NewsViewState {
+    case idle
+    case loading
+    case success([Articles])
+    case error(String)
+}
+
+
+extension NewsViewState {
+
+    var articles: [Articles] {
+        if case .success(let articles) = self {
+            return articles
+        }
+        return []
+    }
+
+    var errorMessage: String? {
+        if case .error(let message) = self {
+            return message
+        }
+        return nil
+    }
+
+    var isLoading: Bool {
+        if case .loading = self {
+            return true
+        }
+        return false
     }
 }
 

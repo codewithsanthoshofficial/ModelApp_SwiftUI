@@ -23,19 +23,19 @@ struct NewsModelRes: Codable {
 
 
 struct Articles:Codable, Identifiable {
-            var id = UUID()
-            let author: String?
-            let title: String?
-            let description: String?
-            let url: String?
-            let urlToImage: String?
+    var id: String { url ?? UUID().uuidString }
+    let author: String?
+    let title: String?
+    let description: String?
+    let url: String?
+    let urlToImage: String?
+    
+    enum CodingKeys: String, CodingKey {
         
-        enum CodingKeys: String, CodingKey {
-            
-            case author
-            case title
-            case description
-            case url
-            case urlToImage
-        }
+        case author
+        case title
+        case description
+        case url
+        case urlToImage
+    }
 }

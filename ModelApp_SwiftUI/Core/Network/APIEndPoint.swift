@@ -10,7 +10,7 @@ import Foundation
 
 enum APIEndPoint {
     
-    static var baseURL: String = "https://newsapi.org/v2/everything?q=tesla&from=2026-01-27&sortBy=publishedAt&apiKey="
+    static var baseURL: String = "https://newsapi.org/v2/everything?q=tesla&from=2026-02-10&sortBy=publishedAt&apiKey="
     
     case news
     
